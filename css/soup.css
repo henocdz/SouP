@@ -1,0 +1,152 @@
+/**
+	<section id="soup_id_1" class="soup-player slim">
+		<section class="soup-track-title">
+			<h2>Xookwankii - Yamantaka (Original mix)</h2>
+		</section>
+		<section class="soup-controls">
+			<div class="soup-control list"><img src="i/list.png" alt="" /></div>
+			<div class="soup-control prev"><img src="i/prev_slim.png" alt="" /></div>
+			<div class="soup-control play_pause"><img src="i/play_slim.png" alt="" /></div>
+			<div class="soup-control next"><img src="i/next_slim.png" alt="" /></div>
+		</section>
+		<section class="soup-progress-bar">
+			<div class="soup-progress back"><img src="" alt="" /></div>
+			<div class="soup-progress loaded"></div>
+			<div class="soup-progress played"></div>
+		</section>
+		<section class="soup-volume-bar">
+			<div class="soup-volume ico"><img src="" alt="" /></div>
+			<div class="soup-volume bar">
+				<div class="soup-volume-b holder"></div>
+				<div class="soup-volume-b percentage"></div>
+			</div>
+		</section>
+		<section class="soup-time">
+			<div class="current-time">00:00</div>
+			<span>&nbsp;/&nbsp;</span>
+			<div class="total-time">00:00</div>
+		</section>
+	</section>
+**/
+
+*{margin:0; padding: 0;}
+
+body,html{
+	width: 100%;
+	height: 100%;
+}
+
+.soup-player.slim{
+	background: #efefef;
+	display: block;
+	height: 35px;
+	width: 100%;
+
+	position: absolute;
+	bottom: 0;
+}
+
+
+.soup-track-title{
+	background: #5d5d5d;
+	display: block;
+	position: absolute;
+	top: -10px;
+	padding: 10px;
+	font-size: 10px;
+	z-index: 0;
+}
+
+.soup-controls, .soup-progress-bar, .soup-volume-bar, .soup-time{
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.soup-controls{
+	margin-right: 1%;
+	width: 10%;
+}
+
+.soup-control{
+	cursor: pointer;
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+	width: 22%;
+}
+
+.soup-control img{
+	display: block;
+	margin: 18% auto;
+	width: 20px;
+}
+
+.soup-progress-bar{
+	height: 100%;
+	margin-right: 1%;
+	position: relative;
+	width: 40%;
+}
+
+.soup-progress-bar img,.soup-progress-bar div{
+	display: block;
+	height: 60%;
+	width: 100%;
+}
+
+.soup-progress-bar img{height: 100%;}
+.soup-progress-bar div{
+	border-radius: 5px;
+	position: absolute;
+	top: 20%;
+}
+
+.soup-progress.back{ z-index: 0; background: #cbcbcb; }
+.soup-progress.back-sc{ z-index: 3;  }
+.soup-progress.played{ z-index: 2; width: 0%; background: #ff9900; }
+.soup-progress.loaded{ z-index: 1; width: 0%; background: #979797; }
+
+
+.soup-volume-bar{
+	margin: 0 1.3%;
+	height: 100%;
+	width: 20px;
+}
+
+.soup-volume-bar:hover{ width: 10%; }
+.soup-volume-bar:hover .soup-volume.bar{ width: 80%; }
+
+.soup-volume.ico{
+	cursor: pointer;
+	display: inline-block;
+	height: 60%;
+	vertical-align: middle;
+}
+
+.soup-volume.ico img{
+	display: block;
+	height: 100%;
+}
+
+.soup-volume.bar{
+	background: #252525;
+	display: inline-block;
+	height: 20%;
+	vertical-align: middle;
+	width: 0%;
+	position: relative;
+}
+
+
+.soup-volume-b.holder{ background: #ea8a10; cursor: pointer; height: 15px; width: 5%; top:-50%; left:60%; position: absolute; z-index: 66; }
+.soup-volume-b.percentage{ background: #555555 ; height: 100%;   width: 60%;}
+
+.soup-volume.space{
+	display: block;
+	width: 100%;
+	height: 18%;
+}
+
+.soup-time{
+	width: 10%;
+}
