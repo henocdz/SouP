@@ -1,38 +1,11 @@
-
-$(function(){
-	var s = new Soup("e0e70592dcc6fb814edc8eed72d12be1",{
-		loading: function(sound){
-			$('.soup-progress.loaded').css('width', sound.bytesLoaded * 100  / sound.bytesTotal  + "%");
-			
-		},
-		playing:function(sound){
-			$('.soup-progress.played').css('width', sound.position * 100  / sound.duration  + "%");
-			$('.soup-time>.total-time').text(s.formatedTime());
-		},
-		end: function(sound){ },
-		error: function(code,msg){
-			console.log(msg);
-		},
-		play: function(){ $('.play_pause>img').attr('src', 'i/pause_slim.png'); },
-		pause: function(){ $('.play_pause>img').attr('src', 'i/play_slim.png'); },
-		load: function(){ $('.soup-time>.current-time').text(s.formatedTime("total"));  },
-		playlist: ['82268275']
-	});
-
-
-	$('.play_pause').on('click', function(e) {	s.play_pause();	});
-	$('.soup-control.next').on('click', function(e) {	s.next();	});
-	$('.soup-control.prev').on('click', function(e) {	s.prev();	});
-
-})
-
 function Soup(client_id, ops){
 
 	var self = this, 
 		channel  = null,
 		playlist = ops.playlist || [], 
 		playlisted = [],
-		playlist_o = ops.playlist || [];
+		playlist_o = ops.playlist || [],
+		tracks_data = {};
 
 	var options = {
 		loading: function(){},
@@ -42,6 +15,7 @@ function Soup(client_id, ops){
 		pause: function(){},
 		error: function(){},
 		load: function(){},
+		dataload: function(){},
 
 		/* Read only */
 		autoplay: false,
@@ -49,16 +23,47 @@ function Soup(client_id, ops){
 		repeat_list: true,
 		repeat_track: false,
 	}
-		
+	
 	$.extend(options, options, ops);
+
+	this.getInfo = function(){
+		return tracks_data[self.id];
+	}
+
+	this.getTracks = function(){
+		return tracks_data;
+	}
 
 	var errorMessage = function(code){
 		if(code === 0){
 			options.error(code,"No playlist items");
 		}else if(code === 1){
 			options.error(1,'Invalid track ID')
+		}else if(code === 2){
+			options.error(2,'Cant load track info :(');
+		}else if(code === 3){
+			options.error(3, 'Error loading track info');
 		}
 	}
+
+	var message = 'SO';
+
+	(function foo() {
+		for(var i = 0; i < playlist_o.length; i++ ){
+			$.get('http://api.soundcloud.com/tracks/'+playlist_o[i]+'.json?client_id='+client_id, function(data) {
+				var id = data.id;
+				tracks_data[id] = {} ;
+				tracks_data[id].duration = data.duration;
+				tracks_data[id].waveform = data.waveform_url;
+				tracks_data[id].artwork = data.artwork_url;
+				tracks_data[id].title = data.title;
+				tracks_data[id].link = "http://soundcloud.com/"+data.user.permalink+"/"+data.permalink;
+			},'json').error(function(){
+				errorMessage(2);
+			});
+		};
+	})();
+
 
 	this.init = function(id, auto){
 		if(id === undefined){
@@ -67,24 +72,26 @@ function Soup(client_id, ops){
 		}
 
 
-		try{
-			console.log(channel)
-		}catch(e){}
-
 		SC.stream("/tracks/"+id,{
 			whileloading: function(){ options.loading(this); },
 			whileplaying: function(){ options.playing(this); },
-			onfinish: function(){ self.end(); options.end(this); },
+			onfinish: function(){  options.end(this); self.end(); },
 			onplay: function(){ options.play(); },
 			onpause: function(){ options.pause(); },
 			onload: function(){ options.load(); }
 		},function(sound){
 			channel = sound;
+			self.id = playlist[0] || null;
+			
+			try{
+				options.dataload(tracks_data[self.id]);	
+			}catch(e){
+				errorMessage(3);
+			}
 
 			if(options.autoplay || auto){
 				channel.play();
 			}
-
 		});
 	}
 
@@ -99,13 +106,13 @@ function Soup(client_id, ops){
 	}
 
 	this.end = function(){
-		if(!repeat_track){
+		if(!options.repeat_track){
 			playlisted.push(playlist[0]);
 			playlist.splice(0,1);
 
 			self.next();
 		}else{
-			s.go();
+			self.go(true);
 		}
 	}
 
@@ -117,44 +124,11 @@ function Soup(client_id, ops){
 		}
 	}
 
-	this.formatedTime = function(time){
-
-		var time = time || '';
-		if(!channel){
-			return undefined;
-		}
-
-		var milis;
-		
-		if( time.toUpperCase() === 'TOTAL'){
-			 milis = channel.duration;
-		}else{
-
-			milis = channel.position;
-		}
-
-		var formated = "";
-		var seconds = Math.round(milis / 1000), minutes, hours;
-
-		if(seconds < 60){
-			formated = "00:"+(seconds<10?'0'+seconds:seconds);
-		}else if(seconds > 60 &&  seconds < 3600){
-			minutes = Math.floor(seconds/60);
-			seconds = seconds % 60;
-
-			formated = (minutes<10?'0'+minutes:minutes) + ":" + (seconds<10?'0'+seconds:seconds);
-		}else{
-			minutes = seconds % 60;
-			seconds = minutes % 60;
-			hours = Math.floor(seconds/24);
-
-			formated = hours + ':' + minutes + ':' + seconds;
-		}
-
-		return formated;
-
+	this.repos = function(pos){
+		channel.pause();
+		channel.setPosition(pos * 1000);
+		channel.play()
 	}
-
 
 	this.next = function(){
 		if(playlist.length > 1 || (playlist.length === 0 && options.repeat_list)){
@@ -165,7 +139,6 @@ function Soup(client_id, ops){
 				return;
 			}
 
-
 			playlisted.push(playlist[0]);
 			playlist.splice(0,1);
 
@@ -174,16 +147,8 @@ function Soup(client_id, ops){
 				playlisted = [];
 			}
 
-			self.init(playlist[0], true);
-
-			
-		}/*else{
-			self.stop();
-			channel.destruct();
-
-			playlist = playlisted;
-		}*/
-
+			self.init(playlist[0], true);			
+		}
 	}
 
 	this.prev = function(){
@@ -208,9 +173,8 @@ function Soup(client_id, ops){
 
 		if(options.random){
 			playlist.sort(function() {return 0.5 - Math.random()});
-			console.log(playlist)
 		}
-			
+
 		self.init(playlist[0],auto);
 	}
 
@@ -219,6 +183,4 @@ function Soup(client_id, ops){
 	}else{
 		this.go();
 	}
-
-
 }

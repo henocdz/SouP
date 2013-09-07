@@ -31,7 +31,7 @@
 
 		<style>
 			*{margin:0;padding: 0;}
-			body{ widows: 100%; height: 100%; }
+			body{ width: 100%; height: 100%; }
 		</style>
 		<link rel="stylesheet" type="text/css" href="css/soup.css" >
 
@@ -42,31 +42,64 @@
 		<section class="soup-track-title">
 			<h2>Xookwankii - Yamantaka (Original mix)</h2>
 		</section>
-		<section class="soup-controls">
-			<div class="soup-control list"><img src="i/list.png" alt="" /></div>
-			<div class="soup-control prev"><img src="i/prev_slim.png" alt="" /></div>
-			<div class="soup-control play_pause"><img src="i/play_slim.png" alt="" /></div>
-			<div class="soup-control next"><img src="i/next_slim.png" alt="" /></div>
-		</section>
-		<section class="soup-progress-bar">
-			<canvas class="soup-progress-canvas"></canvas>
-			<div class="soup-progress back"></div>
-			<div class="soup-progress back-sc"><img src="http://w1.sndcdn.com/oqc9fdYba5uT_m.png" alt="" /></div>
-			<div class="soup-progress loaded"></div>
-			<div class="soup-progress played"></div>
-		</section>
-		<section class="soup-volume-bar">
-			<div class="soup-volume space"></div>
-			<div class="soup-volume ico"><img src="i/volume.png" alt="" /></div>
-			<div class="soup-volume bar">
-				<div class="soup-volume-b holder"></div>
-				<div class="soup-volume-b percentage"></div>
-			</div>
-		</section>
-		<section class="soup-time">
-			<span class="total-time">00:00</span>
-			<span>&nbsp;/&nbsp;</span>
-			<span class="current-time">00:00</span>
+		<div class="soup-main">
+			<section class="soup-controls">
+				<div class="soup-control list"><img src="i/list.png" alt="" /></div>
+				<div class="soup-control prev"><img src="i/prev_slim.png" alt="" /></div>
+				<div class="soup-control play_pause"><img src="i/play_slim.png" alt="" /></div>
+				<div class="soup-control next"><img src="i/next_slim.png" alt="" /></div>
+			</section>
+			<section class="soup-progress-bar">
+				<div class="soup-progress back"></div>
+				<div class="soup-progress back-sc"><img src="http://w1.sndcdn.com/oqc9fdYba5uT_m.png" alt="" /></div>
+				<div class="soup-progress loaded"></div>
+				<div class="soup-progress played"></div>
+			</section>
+			<section class="soup-volume-bar">
+				<div class="soup-volume space"></div>
+				<div class="soup-volume ico"><img src="i/volume.png" alt="" /></div>
+				<div class="soup-volume bar">
+					<div class="soup-volume-b holder"></div>
+					<div class="soup-volume-b percentage"></div>
+				</div>
+			</section>
+			<section class="soup-time">
+				<span class="current-time">00:00</span>
+				<span>&nbsp;/&nbsp;</span>
+				<span class="total-time">00:00</span>
+			</section>
+		</div>
+	</section>
+	<section class="soup-playlist">
+		<section class="soup-list">
+			<article class="soup-track">
+				<img src="http://i1.sndcdn.com/artworks-000056501811-jtaq9s-large.jpg?5e64f12" alt="" />
+				<div class="info">
+					<span>Nicky Valentine - Sometimes (Xookwankii Dubgressive radio) FREE DOWNLOAD</span>
+				</div>
+				<div class="duration"><span>2:00</span></div>
+			</article>
+			<article class="soup-track">
+				<img src="http://i1.sndcdn.com/artworks-000051504716-jtbg6y-large.jpg?5e64f12" alt="" />
+				<div class="info">
+					<span>Title</span>
+				</div>
+				<div class="duration"><span>2:00</span></div>
+			</article>
+			<article class="soup-track">
+				<img src="http://i1.sndcdn.com/artworks-000048055906-g09bym-large.jpg?5e64f12" alt="" />
+				<div class="info">
+					<span>Title</span>
+				</div>
+				<div class="duration"><span>2:00</span></div>
+			</article>
+			<article class="soup-track">
+				<img src="http://i1.sndcdn.com/artworks-000045858112-iwi0f4-large.jpg?5e64f12" alt="" />
+				<div class="info">
+					<span>Title</span>
+				</div>
+				<div class="duration"><span>2:00</span></div>
+			</article>
 		</section>
 	</section>
 
@@ -75,5 +108,6 @@
 	<script src="//connect.soundcloud.com/sdk.js"></script>
 	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="js/soup.js"></script>
+	<script src="js/main.js"></script>
 	</body>
 </html>
